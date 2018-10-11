@@ -1,10 +1,7 @@
 <template>
-    <div class="row">
-        <div class="col-lg-12">
-          <div class="card">
-            <div class="card-header"><i class="fa fa-table"></i> Users List</div>
-            <div class="card-body">
-                <div class="btn-group m-1" role="group">
+  <div>
+    <div class="row p-3">
+                <div class="btn-group" role="group">
                   <button type="button" class="btn btn-primary waves-effect waves-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdown_action_users">
                     Actions
                   </button>
@@ -14,27 +11,36 @@
                     <button @click="refreshTable()" type="button" class="dropdown-item" style="cursor:pointer;"><i class="fa fa-refresh"></i> REFRESH TABLE</button>
                   </div>
                 </div>
-                <br>
-                <br>
+        </div>
+    <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="card-header"><i class="fa fa-table"></i> Users List</div>
+            <div class="card-body">
                 <div class="table-responsive">
-                    <parts-data-table id="users_list" :list_datatable_fields="list_datatable_fields">
+                    <DataTablePart id="users_list" :list_datatable_fields="list_datatable_fields">
                         <tr slot="tbody_tr_table" v-for="(user, index) in users" v-if="users.length > 0" :key="index">
                             <td>{{ user.name }}</td>
+                            <td>{{ user.birthdate | moment }}</td>
                             <td><a :href="user.email">{{ user.email }}</a></td>
-                            <td>{{ user.address }} <strong style="color: #008cff;">({{ user.lat }}, {{ user.lng }})</strong></td>
+                            <td>
+                              <a :href="user.image" data-fancybox="images" :data-caption="user.name">
+                                    <img :src="user.image" :alt="user.name" class="lightbox-thumb img-thumbnail img-responsive">
+                                </a>
+                              </td>
                             <td>
                                 <button @click="initUpdateUser(index)" type="button" class="btn btn-warning waves-effect waves-light m-1"><i class="fa fa-edit"></i></button>
                                 <button @click="removeUser(index)" type="button" class="btn btn-danger waves-effect waves-light m-1"><i class="fa fa-trash"></i></button>
                             </td>
                         </tr>
-                    </parts-data-table>
+                    </DataTablePart>
                 </div>
             </div>
           </div>
         </div>
-        <parts-modal id="add-modal">
+        <ModalPart id="add-modal">
             <div slot="header_modal" class="modal-header">
-                <h5 class="modal-title"><i class="fa fa-plus"></i> Add User !</h5>
+                <h5 class="modal-title"><i class="fa fa-plus"></i> Add User</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -44,7 +50,13 @@
                     <div class="form-group row">
                         <label for="add_user_name" class="col-sm-2 col-form-label">Name</label>
                         <div class="col-sm-10">
-                            <input v-on:keyup.enter="addUser()" v-model="user.name" type="text" class="form-control" id="add_user_name" name="add_user_name" required>
+                            <input v-on:keyup.enter="addUser()" v-model="user.name" type="text" class="form-control" id="add_user_name" name="add_user_name" placeholder="Name"  required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="add_user_birthdate" class="col-sm-2 col-form-label">Birthdate</label>
+                        <div class="col-sm-10">
+                            <datepicker v-on:keyup.enter="addUser()" v-model="user.birthdate" input-class="form-control" placeholder="Click here !" format="dd/MM/yyyy" :language="fr" name="add_user_birthdate" id="add_user_birthdate"></datepicker>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -62,22 +74,22 @@
                     <div class="form-group row">
                         <label for="add_user_role" class="col-sm-2 col-form-label">Role</label>
                         <div class="col-sm-10">
-                            <select class="form-control" v-model="user.role" id="add_user_role" required>
+                            <select class="form-control" v-model="user.user_role" id="add_user_role" required>
                                 <option value="super_admin">Super Administrator</option>
                                 <option value="user" selected>User</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-footer">
-                        <button type="button" class="btn btn-success" data-dismiss="modal">CANCEL</button>
-                        <button @click="addUser()" type="submit" class="btn btn-danger">ADD</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">CANCEL</button>
+                        <button @click="addUser()" type="submit" class="btn btn-success">ADD</button>
                     </div>
                 </form>
             </div>
-        </parts-modal>
-        <parts-modal id="update-modal">
+        </ModalPart>
+        <ModalPart id="update-modal">
             <div slot="header_modal" class="modal-header">
-                <h5 class="modal-title"><i class="fa fa-plus"></i> Update User !</h5>
+                <h5 class="modal-title"><i class="fa fa-edit"></i> Update User</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -87,7 +99,13 @@
                     <div class="form-group row">
                         <label for="update_user_name" class="col-sm-2 col-form-label">Name</label>
                         <div class="col-sm-10">
-                            <input v-on:keyup.enter="updateUser()" v-model="user_update.name" type="text" class="form-control" id="update_user_name" name="update_user_name" required>
+                            <input v-on:keyup.enter="updateUser()" v-model="user_update.name" type="text" class="form-control" id="update_user_name" name="update_user_name" placeholder="Name" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                      <label for="update_user_birthdate" class="col-sm-2 col-form-label">Birthdate</label>
+                        <div class="col-sm-10">
+                            <datepicker v-on:keyup.enter="updateUser()" v-model="user_update.birthdate" input-class="form-control" placeholder="Click here !" format="dd/MM/yyyy" :language="fr" name="update_user_birthdate" id="add_user_birthdate"></datepicker>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -105,40 +123,55 @@
                     <div class="form-group row">
                         <label for="update_user_role" class="col-sm-2 col-form-label">Role</label>
                         <div class="col-sm-10">
-                            <select class="form-control" v-model="user_update.role" name="update_user_role" id="update_user_role" required>
+                            <select class="form-control" v-model="user_update.user_role" name="update_user_role" id="update_user_role" required>
                                 <option value="super_admin">Super Administrator</option>
                                 <option value="user">User</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-footer">
-                        <button type="button" class="btn btn-success" data-dismiss="modal">CANCEL</button>
-                        <button @click="updateUser()" type="submit" class="btn btn-danger">UPDATE</button>
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">CANCEL</button>
+                        <button @click="updateUser()" type="submit" class="btn btn-success">UPDATE</button>
                     </div>
                 </form>
             </div>
-        </parts-modal>
+        </ModalPart>
       </div><!-- End Row-->
+  </div>
 </template>
 
 <script>
+/* eslint-disable */
+import Vue from 'vue'
+import JQuery from 'jquery'
+/* import select2 from 'select2/dist/js/select2' */
+import 'jquery-validation'
+import moment from 'moment'
+import Datepicker from 'vuejs-datepicker'
+import fr from 'vuejs-datepicker/dist/locale/translations/fr'
+import ModalPart from '../../parts/modals/Modal'
+import DataTablePart from '../../parts/tables/DataTable'
+import http from '../../http/'
+let $ = JQuery
 export default {
+  components: {
+    ModalPart,
+    DataTablePart,
+    Datepicker
+  },
   data() {
     return {
       user: {
         name: "",
+        birthdate: "",
         email: "",
         password: "",
-        role: ""
+        user_role: ""
       },
-      user_update: {
-        name: "",
-        email: "",
-        password: "",
-        role: ""
-      },
-      list_datatable_fields: ["Name", "Email", "Address", "Actions"],
-      users: []
+      user_update: {},
+      list_datatable_fields: ["Name", "Birthdate", "Email", 'Image', "Actions"],
+      users: [],
+      fr: fr
     };
   },
   mounted() {
@@ -147,14 +180,70 @@ export default {
   },
   methods: {
     init_components_forms() {
-      $("#dropdown_action_users").dropdown();
-      $("#add_user_form").validate();
-      $("#update_user_form").validate();
+      $("#add_user_form").validate({
+        rules: {
+          add_user_name: 'required',
+          add_user_birthdate: {
+            required: true,
+            date: true
+          },
+          add_user_email: {
+            required: true,
+            email: true
+          },
+          add_user_password: {
+            required: true,
+            minlength: 6
+          },
+          add_user_role: 'required'
+        },
+        messages: {
+          add_user_name: 'Please enter the name',
+          add_user_birthdate: {
+            required: 'Please enter your birthdate',
+            date: 'Please enter a valid date'
+          },
+          add_user_email: {
+            required: 'Please enter your email address',
+            email: 'Please enter a valid email address'
+          },
+          add_user_password: {
+            required: 'Please provide a password',
+            minlength: 'Your password must be at least 6 characters long'
+          },
+          add_user_role: 'Please enter the post content'
+        }
+      });
+      $("#update_user_form").validate({
+        rules: {
+          update_user_name: 'required',
+          update_user_birthdate: {
+            required: true
+          },
+          update_user_email: {
+            required: true,
+            email: true
+          },
+          update_user_role: 'required'
+        },
+        messages: {
+          update_user_name: 'Please enter the name',
+          update_user_birthdate: {
+            required: 'Please enter your birthdate',
+            date: 'Please enter a valid date'
+          },
+          update_user_email: {
+            required: 'Please enter your email address',
+            email: 'Please enter a valid email address'
+          },
+          update_user_role: 'Please enter the post content'
+        }
+      });
     },
     getUsers() {
-      axios.get("users").then(response => {
+      http.get("users", this.$store.state.headers).then(response => {
         this.users = response.data.users;
-        Vue.nextTick(function() {
+        Vue.nextTick(function () {
           Event.$emit("init-datatable", "users_list");
         });
       });
@@ -165,17 +254,19 @@ export default {
     addUser() {
       if (
         this.user.name != "" &&
+        this.user.birthdate != "" &&
         this.user.email != "" &&
         this.user.password != "" &&
-        this.user.role != ""
+        this.user.user_role != ""
       ) {
-        const formData = new FormData();
-        formData.append("name", this.user.name);
-        formData.append("email", this.user.email);
-        formData.append("password", this.user.password);
-        formData.append("role", this.user.role);
-        axios
-          .post("users", formData)
+        http
+          .post("users", {
+            name: this.user.name,
+            birthdate: this.user.birthdate,
+            email: this.user.email,
+            password: this.user.password,
+            user_role: this.user.user_role
+          }, this.$store.state.headers)
           .then(response => {
             this.reset();
             this.refreshTable();
@@ -202,22 +293,20 @@ export default {
     },
     initUpdateUser(index) {
       this.user_update = this.users[index];
-      $("#update-modal").modal("show");
+      this.user_update['password'] = ''
+      Event.$emit("show-modal-normal", "update-modal");
     },
     updateUser() {
       if (
         this.user_update.name != "" &&
+        this.user_update.birthdate != "" &&
         this.user_update.email != "" &&
-        this.user_update.role != ""
+        this.user_update.user_role != ""
       ) {
-        axios
-          .patch("users/" + this.user_update.id, {
-            name: this.user_update.name,
-            email: this.user_update.email,
-            password: this.user_update.password,
-            role: this.user_update.role
-          })
+        http
+          .patch("users/" + this.user_update.id, this.user_update, this.$store.state.headers)
           .then(response => {
+            this.user_update = response.data.user
             Event.$emit("hide-modal-normal", "update-modal");
             Event.$emit(
               "swal-message",
@@ -248,19 +337,20 @@ export default {
         dangerMode: true
       }).then(willDelete => {
         if (willDelete) {
-          axios
-            .delete("users/" + this.users[index].id)
+          http
+            .delete("users/" + this.users[index].id, this.$store.state.headers)
             .then(response => {
               this.users.splice(index, 1);
+              this.refreshTable();
               Event.$emit(
                 "swal-message",
                 "Remove",
-                response.data.message,
+                response.data.msg,
                 "success",
                 2000
               );
             })
-            .catch(error => {});
+            .catch(error => { });
         } else {
           Event.$emit(
             "swal-message",
@@ -281,10 +371,18 @@ export default {
     },
     reset() {
       this.user.name = "";
-      this.user.name = "";
+      this.user.birthdate = "";
       this.user.email = "";
       this.user.password = "";
-      this.user.role = "";
+      this.user.user_role = "";
+    },
+    moment: function () {
+      return moment()
+    }
+  },
+  filters: {
+    moment: function (date) {
+      return moment(date).format('DD/MM/YYYY')
     }
   }
 };

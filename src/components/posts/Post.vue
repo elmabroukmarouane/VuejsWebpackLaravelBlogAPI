@@ -124,13 +124,13 @@ export default {
 			http.get('posts/' + this.post_id, this.$store.state.headers).then(response => {
 				this.post = response.data.post;
 				this.post_user = this.post.user;
-				Event.$emit(
+				/* Event.$emit(
 					"swal-message",
 					"Post Details",
 					response.data.msg,
 					"success",
 					2000
-				);
+				); */
 			});
 		},
 		submitComment() {

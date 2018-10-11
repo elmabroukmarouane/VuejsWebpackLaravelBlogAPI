@@ -9,7 +9,9 @@
     </table>
 </template>
 <script>
+/* eslint-disable */
 export default {
-  props: ["id", "list_datatable_fields"]
+    name: 'DataTablePart',
+    props: ["id", "list_datatable_fields"]
 };
 </script>

@@ -15,9 +15,12 @@
         <div class="row">
             <div class="col-lg-4" v-for="(post, index) in posts" v-if="posts.length > 0" :key="index">
                 <Card :id="getIDCard(index+1)">
-                    <img slot="post_image" :src="post.image" class="card-img-top" :alt="post.title">
+                    <!-- <img slot="post_image" :src="post.image" class="card-img-top" :alt="post.title"> -->
+                    <a slot="post_image" :href="post.image" data-fancybox="images" :data-caption="post.name">
+                        <img :src="post.image" :alt="post.name" class="lightbox-thumb img-responsive">
+                    </a>
                     <span slot="post_title">
-                    <h5 class="card-title text-primary">{{post.id}} : {{post.title}}</h5>
+                    <h5 @click="$router.push({ path: '/post/' + post.id })" style="cursor: pointer;" class="card-title text-primary">{{post.title}}</h5>
                     </span>
                     <span slot="post_description">
                         <p class="card-text">{{post.content.substr(0, 100)}} ...</p>
@@ -33,7 +36,6 @@
                 </Card>
             </div>
         </div>
-        
     <!-- Begin Modal Logout -->
     <ModalPart id="add-post-modal">
         <div slot="header_modal" class="modal-header">
@@ -43,7 +45,7 @@
             </button>
         </div>
         <div slot="body_modal" class="modal-body">
-            <form id="update_user_form" method="post" action="javascript:void(0)">
+            <form id="add_post_form" method="post" action="javascript:void(0)">
                 <!-- <div class="form-group row">
                     <label for="add_post_user" class="col-sm-2 col-form-label">Users</label>
                     <div class="col-sm-10">
@@ -74,13 +76,13 @@
     <!-- Begin Modal Logout -->
     <ModalPart id="update-post-modal">
         <div slot="header_modal" class="modal-header">
-            <h5 class="modal-title"><i class="fa fa-plus"></i> Update Post</h5>
+            <h5 class="modal-title"><i class="fa fa-edit"></i> Update Post</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <div slot="body_modal" class="modal-body">
-            <form id="update_user_form" method="post" action="javascript:void(0)">
+            <form id="update_post_form" method="post" action="javascript:void(0)">
                 <!-- <div class="form-group row">
                     <label for="add_post_user" class="col-sm-2 col-form-label">Users</label>
                     <div class="col-sm-10">
@@ -113,12 +115,13 @@
 
 <script>
 /* eslint-disable */
-/* import JQuery from 'jquery' */
+import JQuery from 'jquery'
 /* import select2 from 'select2/dist/js/select2' */
+import 'jquery-validation'
 import Card from '../../parts/cards/Card.vue'
 import ModalPart from '../../parts/modals/Modal'
 import http from '../../http/'
-/* let $ = JQuery */
+let $ = JQuery
 export default {
     components: {
         Card,
@@ -137,20 +140,46 @@ export default {
         }
     },
     mounted() {
+        this.init_validate_add_post_form();
+        this.init_validate_update_post_form();
         this.getPosts();
         /* this.getUsers(); */
     },
     methods: {
+        init_validate_add_post_form() {
+            $('#add_post_form').validate({
+                rules: {
+                    add_post_title: 'required',
+                    add_post_content: 'required'
+                },
+                messages: {
+                    add_post_title: 'Please enter the post title',
+                    add_post_content: 'Please enter the post content'
+                }
+            })
+        },
+        init_validate_update_post_form() {
+            $('#update_post_form').validate({
+                rules: {
+                    update_post_title: 'required',
+                    update_post_content: 'required'
+                },
+                messages: {
+                    update_post_title: 'Please enter the post title',
+                    update_post_content: 'Please enter the post content'
+                }
+            })
+        },
         getPosts() {
             http.get('posts', this.$store.state.headers).then(response => {
                 this.posts = response.data.posts;
-                Event.$emit(
+                /* Event.$emit(
                     "swal-message",
                     "Posts List",
                     response.data.msg,
                     "success",
                     2000
-                );
+                ); */
             });
         },
         /* getUsers() {
@@ -202,7 +231,7 @@ export default {
                         Event.$emit("hide-modal-normal", "update-post-modal");
                         Event.$emit(
                             "swal-message",
-                            "Update User",
+                            "Update Post",
                             response.data.msg,
                             "success",
                             2000
@@ -212,7 +241,7 @@ export default {
                         Event.$emit("hide-modal-normal", "update-post-modal");
                         Event.$emit(
                             "swal-message",
-                            "Update User",
+                            "Update Post",
                             "Error Axios ! " + error,
                             "error",
                             2000

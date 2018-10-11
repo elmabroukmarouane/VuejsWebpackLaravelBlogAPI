@@ -8,6 +8,8 @@ import LayoutApp from '../layouts/LayoutApp.vue'
 import Login from '../components/auth/Login.vue'
 import Home from '../components/home/Home.vue'
 import Post from '../components/posts/Post.vue'
+import Posts from '../components/posts/Posts.vue'
+import Users from '../components/users/Users.vue'
 import Register from '../components/auth/Register.vue'
 
 Vue.use(VueRouter)
@@ -32,16 +34,18 @@ const routes = [{
             name: 'Posts List',
             path: '/home',
             component: Home,
-        }]
-    },
-    {
-        path: '/',
-        component: LayoutApp,
-        beforeEnter: requireAuth,
-        children: [{
+        }, {
             name: 'Posts Details',
             path: '/post/:id',
             component: Post,
+        }, {
+            name: 'Users Management',
+            path: '/users',
+            component: Users,
+        }, {
+            name: 'Posts Management',
+            path: '/posts',
+            component: Posts,
         }]
     },
     {

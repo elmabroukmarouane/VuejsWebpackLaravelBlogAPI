@@ -17,10 +17,21 @@ new Vue({
     router,
     store,
     http,
+    data() {
+        return {
+            table: ''
+        }
+    },
     mounted() {
         this.getStoreData()
     },
     created() {
+        Event.$on('init-datatable', (tableid) => {
+            this.datatableThis(tableid);
+        });
+        Event.$on('destroy-datatable', () => {
+            this.destroyThis();
+        });
         Event.$on('logout-app', () => {
             this.logoutApp();
         });
@@ -38,6 +49,12 @@ new Vue({
         getStoreData() {
             /* this.$store.dispatch('LOAD_POSTS_LIST') */
             this.$store.dispatch('LOAD_USERS_LIST')
+        },
+        datatableThis(tableid) {
+            this.table = $('#' + tableid).DataTable();
+        },
+        destroyThis() {
+            this.table.destroy();
         },
         showModalNormal(modalid) {
             $("#" + modalid).modal("show");
