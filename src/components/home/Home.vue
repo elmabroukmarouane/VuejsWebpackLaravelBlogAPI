@@ -24,6 +24,7 @@
                     </span>
                     <span slot="btn_lire_suite">
                     <a href="javascript:void()" class="btn btn-primary waves-effect waves-light m-1"  @click="$router.push({ path: '/post/' + post.id })"><i class="fa fa-plus"></i> Lire la suite</a>
+                    <a href="javascript:void()" class="btn btn-warning waves-effect waves-light m-1"  @click="initUpdatePost(index)" v-if="post.user.id === $store.state.user.id"><i class="fa fa-edit"></i></a>
                     <a href="javascript:void()" class="btn btn-danger waves-effect waves-light m-1"  @click="deletePost(index, post.id)" v-if="post.user.id === $store.state.user.id"><i class="fa fa-trash-o"></i></a>
                     </span>
                     <span slot="nb_comments">
@@ -32,10 +33,10 @@
                 </Card>
             </div>
         </div>
-        <!-- Begin Modal Logout -->
+    <!-- Begin Modal Logout -->
     <ModalPart id="add-post-modal">
         <div slot="header_modal" class="modal-header">
-            <h5 class="modal-title"><i class="fa fa-plus"></i> Add Post !</h5>
+            <h5 class="modal-title"><i class="fa fa-plus"></i> Add Post</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
@@ -69,6 +70,43 @@
             </form>
         </div>
     </ModalPart>
+    <!-- Begin Modal Logout -->
+    <ModalPart id="update-post-modal">
+        <div slot="header_modal" class="modal-header">
+            <h5 class="modal-title"><i class="fa fa-plus"></i> Update Post</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div slot="body_modal" class="modal-body">
+            <form id="update_user_form" method="post" action="javascript:void(0)">
+                <!-- <div class="form-group row">
+                    <label for="add_post_user" class="col-sm-2 col-form-label">Users</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" v-model="post.user_id">
+                            <option v-for="(user, userIndex) in users" v-if="users.length > 0" :key="userIndex" :value="user.id">{{ user.name }}</option>
+                        </select>
+                    </div>
+                </div> -->
+                <div class="form-group row">
+                    <label for="update_post_title" class="col-sm-2 col-form-label">Title</label>
+                    <div class="col-sm-10">
+                        <input v-on:keyup.enter="updatePost()" v-model="update_post.title" type="text" class="form-control" id="update_post_title" name="update_post_title" placeholder="Enter the title !" required>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="update_post_content" class="col-sm-2 col-form-label">Content</label>
+                    <div class="col-sm-10">
+                        <textarea v-model="update_post.content" class="form-control" rows="3" name="update_post_content" id="update_post_content" placeholder="Enter the content !"></textarea>
+                    </div>
+                </div>
+                <div class="form-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">CANCEL</button>
+                    <button @click="updatePost()" type="submit" class="btn btn-success">UPDATE POST</button>
+                </div>
+            </form>
+        </div>
+    </ModalPart>
     </div>
 </template>
 
@@ -93,7 +131,8 @@ export default {
                 /* user_id: null, */
                 title: "",
                 content: ""
-            }
+            },
+            update_post: {}
         }
     },
     mounted() {
@@ -135,6 +174,8 @@ export default {
                     .then(response => {
                         this.posts.unshift(response.data.post)
                         Event.$emit("hide-modal-normal", "add-post-modal");
+                        this.post.title = ''
+                        this.post.content = ''
                         Event.$emit(
                             "swal-message",
                             "Add Post",
@@ -143,6 +184,39 @@ export default {
                             2000
                         );
                     })
+            }
+        },
+        initUpdatePost(index) {
+            this.update_post = this.posts[index];
+            Event.$emit("show-modal-normal", "update-post-modal");
+        },
+        updatePost() {
+            if (
+                this.update_post.title != "" &&
+                this.update_post.content != ""
+            ) {
+                http
+                    .patch("posts/" + this.update_post.id, this.update_post, this.$store.state.headers)
+                    .then(response => {
+                        Event.$emit("hide-modal-normal", "update-post-modal");
+                        Event.$emit(
+                            "swal-message",
+                            "Update User",
+                            response.data.msg,
+                            "success",
+                            2000
+                        );
+                    })
+                    .catch(error => {
+                        Event.$emit("hide-modal-normal", "update-post-modal");
+                        Event.$emit(
+                            "swal-message",
+                            "Update User",
+                            "Error Axios ! " + error,
+                            "error",
+                            2000
+                        );
+                    });
             }
         },
         deletePost(post_index, id) {
