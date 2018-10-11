@@ -33,6 +33,7 @@
                 </Card>
             </div>
         </div>
+        
     <!-- Begin Modal Logout -->
     <ModalPart id="add-post-modal">
         <div slot="header_modal" class="modal-header">
