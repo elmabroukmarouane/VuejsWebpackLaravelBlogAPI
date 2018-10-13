@@ -1,6 +1,9 @@
-# vuejs-webpack-laravel-blog-new
+# A Webpack Vue.js Laravel REST API Blog
 
-> A Webpack Vue.js Laravel REST API Blog
+A Webpack Vue.js Laravel REST API Blog application for Blog Management
+
+- This application is a frontend part of an LAravel API seperated from Laravel.
+- All the code is written by me.
 
 ## Build Setup
 
@@ -17,23 +20,6 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
-
-# C-app Developed by Laravel 5.4 & JQuery
-
-A [Laravel](http://laravel.com/) and [JQuery](https://jquery.com/) application for trading management.
-
-- This application is a frontend part of an LAravel API seperated from Laravel.
-- All the code is written by me.
-
-## Installation
-
-# install dependencies
-
-npm install
-
-# serve with hot reload at localhost:8080
-
-npm run dev
 
 ## Live Demo
 
