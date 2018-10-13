@@ -4,7 +4,7 @@
 
 ## Build Setup
 
-``` bash
+```bash
 # install dependencies
 npm install
 
@@ -18,4 +18,33 @@ npm run build
 npm run build --report
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+# C-app Developed by Laravel 5.4 & JQuery
+
+A [Laravel](http://laravel.com/) and [JQuery](https://jquery.com/) application for trading management.
+
+- This application is a frontend part of an LAravel API seperated from Laravel.
+- All the code is written by me.
+
+## Installation
+
+# install dependencies
+
+npm install
+
+# serve with hot reload at localhost:8080
+
+npm run dev
+
+## Live Demo
+
+Here is the link for Live demo [Live Demo](http://elmabroukmarouane.pw/BlogAPI/PHP/Laravel/Frontend/Vue.js/Prodution)
+
+## Accounts :
+
+- Super Administrator : Email : [super_admin@mail.com](super_admin@mail.com) Password : 123456
+
+- User : Email : [user@mail.com](user@mail.com) Password : 123456
+
+## Contact :
+
+EL MABROUK Marouane : [elmabroukmarouane@gmail.com](elmabroukmarouane@gmail.com)
