@@ -21,6 +21,7 @@ npm run dev
 
 # build for production with minification
 npm run build
+Copy dist/index.html and bring out from dist and copy also dist/ folder into your website root directory. Done.
 
 # build for production and view the bundle analyzer report
 npm run build --report
