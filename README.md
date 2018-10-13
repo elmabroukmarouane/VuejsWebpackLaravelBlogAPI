@@ -9,6 +9,12 @@ A Webpack Vue.js Laravel REST API Blog application for Blog Management
 
 - Don't forget to change the API URL in src/http/http.js into your API URL
 - Upload the Laravel API in my repository to run this frontend application
+- To create a Vue.js project with [vue-cli](https://github.com/vuejs/vue-cli) you need to execute these commands :
+  $ npm install -g vue-cli //If vue-cli is not installed in your machine
+  $ vue init webpack my-project
+  $ cd my-project
+  $ npm install
+  $ npm run dev
 
 ## Build Setup
 
