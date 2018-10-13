@@ -5,6 +5,11 @@ A Webpack Vue.js Laravel REST API Blog application for Blog Management
 - This application is a frontend part of an LAravel API seperated from Laravel.
 - All the code is written by me.
 
+## Tips
+
+- Don't forget to change the API URL in src/http/http.js into your API URL
+- Upload the Laravel API in my repository to run this frontend application
+
 ## Build Setup
 
 ```bash
